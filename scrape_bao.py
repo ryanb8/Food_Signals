@@ -23,6 +23,7 @@ def import_html_file(path):
     else:
         return False
 
+
 def main():
     doc_tags = {"grocery":("/Users/Ryan/Documents/003_Charlottesville/UVA"
                            "/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
