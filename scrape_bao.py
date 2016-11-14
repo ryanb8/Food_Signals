@@ -25,9 +25,10 @@ def import_html_file(path):
 
 
 def main():
-    doc_tags = {"grocery":("/Users/Ryan/Documents/003_Charlottesville/UVA"
-                           "/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
-                           "data/BAO/business/AtlantaGroceryStores.html"),
+    doc_tags = {"grocery": [
+                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO/"
+                     "business/AtlantaGroceryStores.html")],
                 "restaurant": [
                     ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
                      "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
