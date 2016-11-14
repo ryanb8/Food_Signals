@@ -13,6 +13,8 @@ Changelog:      Initial Version 2016 11 14
 
 from bs4 import BeautifulSoup as bs4
 import os
+import pandas as pd
+import numpy as np
 
 
 def import_html_file(path):
@@ -25,6 +27,7 @@ def import_html_file(path):
 
 
 def main():
+    # Get Data
     doc_tags = {"grocery": [
                     ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
                      "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO/"
@@ -47,6 +50,16 @@ def main():
                      "/business/Restaurants(5).html")
                 ]
                 }
+
+    #Get data
+    for key in doc_tags:
+        tag = key
+        files = doc_tags[key]
+        data = get_data(tag, files)
+
+
+
+
 
 
 if __name__ == "__main__":
