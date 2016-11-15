@@ -34,7 +34,8 @@ field_tag_dict = {"Name": ("dgrid-cell dgrid-cell-padding "
                   "City": ("dgrid-cell dgrid-cell-padding "
                            "dgrid-column-field3 field-CITY field3"),
                   "State_Name": ("dgrid-cell dgrid-cell-padding "
-                                 "dgrid-column-field4 field-STATE_NAME field4"),
+                                 "dgrid-column-field4 "
+                                 "field-STATE_NAME field4"),
                   "Zip": ("dgrid-cell dgrid-cell-padding "
                           "dgrid-column-field5 field-ZIP field5"),
                   "NAICS": ("dgrid-cell dgrid-cell-padding "
@@ -45,15 +46,20 @@ field_tag_dict = {"Name": ("dgrid-cell dgrid-cell-padding "
                                       "dgrid-column-field8 field-EMPNUM "
                                       "field8"),
                   "Sales_Volume": ("dgrid-cell dgrid-cell-padding "
-                                   "dgrid-column-field9 field-SALESVOL field9"),
+                                   "dgrid-column-field9 "
+                                   "field-SALESVOL field9"),
                   "Latitude": ("dgrid-cell dgrid-cell-padding "
-                               "dgrid-column-field11 field-LATITUDE field11"),
+                               "dgrid-column-field11 "
+                               "field-LATITUDE field11"),
                   "Longitude": ("dgrid-cell dgrid-cell-padding "
-                                "dgrid-column-field12 field-LONGITUDE field12"),
+                                "dgrid-column-field12 "
+                                "field-LONGITUDE field12"),
                   "Object_ID": ("dgrid-cell dgrid-cell-padding "
                                 "dgrid-column-field0 field-OBJECTID field0"),
-                  "Description": ("dgrid-cell dgrid-cell-padding dgrid-column-field10 field-DESC_ field10")
-              }
+                  "Description": ("dgrid-cell "
+                                  "dgrid-cell-padding "
+                                  "dgrid-column-field10 field-DESC_ field10")
+                  }
 
 
 def get_data(files):
@@ -116,20 +122,20 @@ def main():
                 ]
                 }
 
-    #Get data
+    # Get data
     all_data = []
     for key in doc_tags:
         files = doc_tags[key]
         (data, error_flag, error_files) = get_data(files)
         all_data.append(data)
         print("Error flag for {} key was {}".format(key, error_flag))
-        if error_flag :
+        if error_flag:
             print("Files with errors are: {}".format(error_files))
             print(error_files)
         print("data length was")
         print(len(data))
 
-    #export data
+    # export data
     for i in range(len(all_data)):
         fpath = "/Users/Ryan/Desktop/bao" + str(i) + ".csv"
         all_data[i].to_csv(path_or_buf=fpath,
