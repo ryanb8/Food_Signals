@@ -122,9 +122,9 @@ def main():
         files = doc_tags[key]
         (data, error_flag, error_files) = get_data(files)
         all_data.append(data)
-        print("Error flag for {} key was {}")
+        print("Error flag for {} key was {}".format(key, error_flag))
         if error_flag :
-            print("Files with errors are:")
+            print("Files with errors are: {}".format(error_files))
             print(error_files)
         print("data length was")
         print(len(data))
