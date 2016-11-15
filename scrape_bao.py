@@ -20,8 +20,10 @@ Changelog:      Initial Version 2016 11 14
 
 import os
 import pandas as pd
+import bs4
 
 # Globals
+table_tag = "td"
 field_tags = ["Name", "Street", "City", "State_Name", "Zip", "NAICS", "SIC",
               "Employee_Number", "Sales_Volume", "Latitude", "Longitude",
               "Object_ID", "Description"]
@@ -50,24 +52,8 @@ field_tag_dict = {"Name": ("dgrid-cell dgrid-cell-padding "
                                 "dgrid-column-field12 field-LONGITUDE field12"),
                   "Object_ID": ("dgrid-cell dgrid-cell-padding "
                                 "dgrid-column-field0 field-OBJECTID field0"),
-                  "Description": ("dgrid-cell dgrid-cell-padding "
-                                  "dgrid-column-field10 field-DESC_ field10")
+                  "Description": ("dgrid-cell dgrid-cell-padding dgrid-column-field10 field-DESC_ field10")
               }
-#start_table = 22 #from pd.read_html, tables at beginning to trash
-#kill_tables = 11 #from pd.read_html, tables at end to trash
-
-
-def import_html_file(path):
-    """
-    :param path:
-    :return:
-    """
-    if os.path.isfile(path=path):
-        with open(path, mode='r') as f:
-            lines = f.read()
-        return lines
-    else:
-        return False
 
 
 def get_data(files):
@@ -78,22 +64,29 @@ def get_data(files):
     :param files: list of file paths
     :return: pandas dataframe, error flag
     """
-    data = pd.DataFrame()
     error_flag = False
     error_files = []
+    data_list = []
     for file in files:
+        print("file is")
+        print(file)
+        print("\n")
         if os.path.isfile(file):
-            this_data = pd.read_html(file)
-            print(type(this_data))
-            print(len(this_data))
-            print(this_data[22])
-            print(this_data[1050])
-            this_data = pd.concat(this_data[start_table : len(this_data)-(kill_tables)])
-            data = pd.concat(data, this_data)
+            soup = bs4.BeautifulSoup(open(file), "html5lib")
+            data = {}
+            for i in range(len(field_tags)):
+                tag = field_tags[i]
+                all_tags = soup.find_all(table_tag, attrs=field_tag_dict[tag])
+                data[tag] = [tag.string for tag in all_tags]
+            print("making data frame")
+            data_list.append(pd.DataFrame(data))
         else:
             error_flag = True
             error_files.append(file)
-    return (data, error_flag, error_files)
+    data = pd.concat(data_list)
+    data = data[field_tags]
+    data = data.sort([field_tags[1], field_tags[8]])
+    return data, error_flag, error_files
 
 
 def main():
@@ -122,12 +115,11 @@ def main():
                 }
 
     #Get data
-    data_list = []
+    all_data = []
     for key in doc_tags:
-        tag = key
         files = doc_tags[key]
         (data, error_flag, error_files) = get_data(files)
-        data_list.append(data)
+        all_data.append(data)
         print("Error flag for {} key was {}")
         if error_flag :
             print("Files with errors are:")
@@ -136,8 +128,10 @@ def main():
         print(len(data))
 
     #export data
-
-
+    for i in range(len(all_data)):
+        fpath = "/Users/Ryan/Desktop/bao" + str(i) + ".csv"
+        all_data[i].to_csv(path_or_buf=fpath,
+                              sep=",")
 
 if __name__ == "__main__":
     main()
