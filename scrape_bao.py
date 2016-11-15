@@ -87,7 +87,7 @@ def get_data(files):
     data = data[field_tags]
     data = data.sort_values(by=[field_tags[0], field_tags[8]],
                             axis=0,
-                            ascending=[False, True])
+                            ascending=[True, True])
     return data, error_flag, error_files
 
 
