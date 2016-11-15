@@ -8,14 +8,14 @@ Description:    This file contains the routines to import the BAO HTML,
 scrape out the data, transform it into standard form, and export to .csv
 
 Depends on:
-sys
 os
 BeautifulSoup (bs4)
 pandas
 html5lib
-lxml
+
 
 Changelog:      Initial Version 2016 11 14
+                Final Version 2016 11 15
 """
 
 import os
