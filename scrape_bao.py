@@ -8,7 +8,7 @@ Description:    This file contains the routines to import the BAO HTML,
 scrape out the data, transform it into standard form, and export to .csv
 
 Depends on:
-Sys
+sys
 os
 BeautifulSoup (bs4)
 pandas
@@ -85,7 +85,9 @@ def get_data(files):
             error_files.append(file)
     data = pd.concat(data_list)
     data = data[field_tags]
-    data = data.sort([field_tags[1], field_tags[8]])
+    data = data.sort_values(by=[field_tags[0], field_tags[8]],
+                            axis=0,
+                            ascending=[False, True])
     return data, error_flag, error_files
 
 
