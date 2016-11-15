@@ -7,13 +7,19 @@ Email:          bcr5af@virginia.edu
 Description:    This file contains the routines to import the BAO HTML,
 scrape out the data, transform it into standard form, and export to .csv
 
+Depends on:
+Sys
+os
+BeautifulSoup (bs4)
+pandas
+html5lib
+lxml
 
 Changelog:      Initial Version 2016 11 14
 """
 
 import os
 import pandas as pd
-import bs4
 
 # Globals
 field_tags = ["Name", "Street", "City", "State_Name", "Zip", "NAICS", "SIC",
@@ -47,6 +53,8 @@ field_tag_dict = {"Name": ("dgrid-cell dgrid-cell-padding "
                   "Description": ("dgrid-cell dgrid-cell-padding "
                                   "dgrid-column-field10 field-DESC_ field10")
               }
+#start_table = 22 #from pd.read_html, tables at beginning to trash
+#kill_tables = 11 #from pd.read_html, tables at end to trash
 
 
 def import_html_file(path):
@@ -62,21 +70,26 @@ def import_html_file(path):
         return False
 
 
-def get_data(tag, files):
+def get_data(files):
     """
     Takes each file in the files list, scrapes BAO data out of it
     and transforms into a single pandas DF.
 
-    :param tag: type of tag, as string
     :param files: list of file paths
     :return: pandas dataframe, error flag
     """
-    data = pd.dataframe()
+    data = pd.DataFrame()
     error_flag = False
     error_files = []
     for file in files:
         if os.path.isfile(file):
-            soup = bs4.BeautifulSoup(open(file), "lxml")
+            this_data = pd.read_html(file)
+            print(type(this_data))
+            print(len(this_data))
+            print(this_data[22])
+            print(this_data[1050])
+            this_data = pd.concat(this_data[start_table : len(this_data)-(kill_tables)])
+            data = pd.concat(data, this_data)
         else:
             error_flag = True
             error_files.append(file)
@@ -109,10 +122,21 @@ def main():
                 }
 
     #Get data
+    data_list = []
     for key in doc_tags:
         tag = key
         files = doc_tags[key]
-        (data, error_flag, error_files) = get_data(tag, files)
+        (data, error_flag, error_files) = get_data(files)
+        data_list.append(data)
+        print("Error flag for {} key was {}")
+        if error_flag :
+            print("Files with errors are:")
+            print(error_files)
+        print("data length was")
+        print(len(data))
+
+    #export data
+
 
 
 if __name__ == "__main__":
