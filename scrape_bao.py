@@ -131,7 +131,7 @@ def main():
     for i in range(len(all_data)):
         fpath = "/Users/Ryan/Desktop/bao" + str(i) + ".csv"
         all_data[i].to_csv(path_or_buf=fpath,
-                              sep=",")
+                           sep=",")
 
 if __name__ == "__main__":
     main()
