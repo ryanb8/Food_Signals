@@ -102,9 +102,17 @@ def main():
     base_path_grocery = ("/Users/Ryan/Documents/003_Charlottesville/"
                          "UVA/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
                          "data/BAO/raw/v2/Grocery")
-    doc_tags = {"grocery": [
-        os.path.join(base_path_grocery, ('0' + str(i + 1))[-2:] + ".html") for
+    base_path_restaur = ("/Users/Ryan/Documents/003_Charlottesville/"
+                         "UVA/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
+                         "data/BAO/raw/v2/Restaurant")
+    # doc_tags = {"grocery": [
+    #     os.path.join(base_path_grocery, ('0' + str(i + 1))[-2:] + ".html") for
+    #     i in range(27)]}
+    doc_tags = {"restaurant": [
+        os.path.join(base_path_restaur, ('0' + str(i + 1))[-2:] + ".html") for
         i in range(27)]}
+
+
     # doc_tags = {"grocery": [
     #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
     #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO/"
