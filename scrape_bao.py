@@ -99,28 +99,34 @@ def get_data(files):
 
 def main():
     # Get Data
+    base_path_grocery = ("/Users/Ryan/Documents/003_Charlottesville/"
+                         "UVA/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
+                         "data/BAO/raw/v2/Grocery")
     doc_tags = {"grocery": [
-                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO/"
-                     "business/AtlantaGroceryStores.html")],
-                "restaurant": [
-                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-                     "/business/Restaurants(1).html"),
-                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-                     "/business/Restaurants(2).html"),
-                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-                     "/business/Restaurants(3).html"),
-                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-                     "/business/Restaurants(4).html"),
-                    ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-                     "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-                     "/business/Restaurants(5).html")
-                ]
-                }
+        os.path.join(base_path_grocery, ('0' + str(i + 1))[-2:] + ".html") for
+        i in range(27)]}
+    # doc_tags = {"grocery": [
+    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO/"
+    #                  "business/AtlantaGroceryStores.html")],
+    #             "restaurant": [
+    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
+    #                  "/business/Restaurants(1).html"),
+    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
+    #                  "/business/Restaurants(2).html"),
+    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
+    #                  "/business/Restaurants(3).html"),
+    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
+    #                  "/business/Restaurants(4).html"),
+    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
+    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
+    #                  "/business/Restaurants(5).html")
+    #             ]
+    #             }
 
     # Get data
     all_data = []
