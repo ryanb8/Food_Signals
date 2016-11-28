@@ -47,14 +47,22 @@ fd_to_list <- function(df,
                        groups=c("point_id", "buffer_val", "point_layer")){
   # keep only desired columns
   df <- df %>% 
-    select_(.dots=c(factor_default, double_default, string_default))
+    select_(.dots=c(factor, double, string))
   
   # type Conversions
   # convert all stings and doubles from factor to strings
-  df[ , string] <- apply(df[, string], 2, function(x) as.character(x))
+  #df[ , string] <- apply(df[, string], 2, function(x) as.character(x))
+  df[ , string] <- lapply(df[ , string], function(x) as.character(x))
   
   # covert doubles to numerics
-  df[ , double] <- apply(df[, double], 2, function(f) as.numeric(levels(f))[f])
+  #df[ , double] <- apply(df[, double], 2, function(f) as.numeric(levels(f))[f])
+  df[ , double] <- lapply(df[ , double], function(f){
+    if (is.factor(f)){
+      as.numeric(levels(f))[f]
+    } else{
+      f
+    }
+  })
 
   # Keep factors - Unescessary
   #df[ ,factor] <- as.factor(df[ ,factor])
