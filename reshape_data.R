@@ -63,7 +63,11 @@ drops_default <- c(
   "ACAData_csv_Lower_Limit_of_Top_5_Percent",
   "ACAData_csv_Highest_Quintile",
   "ACAData_csv_Top_5_Percent",
-  "ACAData_csv_Gini_Index"
+  "ACAData_csv_Gini_Index",
+  "ACAData_csv_Population_25_Years_and_over_",
+  "ACAData_csv_Total_Population",
+  "ACAData_csv_Total_Population_",
+  "Population_Density__per_sq__mile_"
 )
 string_default <- c(
   "ct_num_to_name_csv_CT_Num",
@@ -71,7 +75,8 @@ string_default <- c(
   "point_layer",
   "point_id",
   "point_name",
-  "point_desc"
+  "point_desc",
+  "buffer_val"
 )
 double_default <- c(
   "pop_real",
@@ -106,6 +111,14 @@ fd_to_list <- function(df,
   df <- df[ , !(names(df) %in% drops)]
   
   # type Conversions
+  # convert all stings and doubles from factor to strings
+  df[ ,c(string, double)] <- as.character(unlist(df[ ,c(string, double)]))
+  
+  # covert doubles to numerics
+  df[ , double] <- as.numeric(df[ , double]))
+
+  # Keep factors
+
   
   
   #Create Analysis Identifier (for grouping)
@@ -114,7 +127,7 @@ fd_to_list <- function(df,
   # the corresponding point. These are the census tracts and their data within
   # a buffer value of that given point. (see restarant and grocery data)
   # note that point data is not unique! needs other two vars to get grouping
-  df$group <- 
+  #df$group <- 
   
   
   # Type conversions
