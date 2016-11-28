@@ -29,7 +29,8 @@ double_default <- c(
   "pc_q4",
   "pc_q5",
   "shp_man2",
-  "new_area"
+  "new_area",
+  "ct_area_yd"
 )
 factor_default <- c(
   "CT_Num",
@@ -39,12 +40,12 @@ factor_default <- c(
   "ACAData_csv_Census_Tract"
 )
 fd_to_list <- function(df, 
-                       drops=drops_default,
                        string=string_default,
                        double=double_default,
                        factor=factor_default){
-  # remove bad columns
-  df <- df[ , !(names(df) %in% drops)]
+  # keep only desired columns
+  df <- df %>% 
+    select_(.dots=c(factor_default, double_default, string_default))
   
   # type Conversions
   # convert all stings and doubles from factor to strings
