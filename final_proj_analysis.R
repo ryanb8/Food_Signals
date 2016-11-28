@@ -4,9 +4,9 @@
 # averages on the calculations, and generates graphs.
 
 #Import data
-# full_data <- read.csv("../data/Analysis_Output/real_output.csv")
-# gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
-# rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
+full_data <- read.csv("../data/Analysis_Output/real_output.csv")
+gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
+rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
 ct_area_data <- read.table("../data/Analysis_Output/ct_area_yds.txt",
                            header = TRUE,
                            sep = ",")
@@ -39,6 +39,9 @@ full_data$ct_area_yd <- unlist(
              ct_area_data$CT_area_Yds[
                which(
                  as.character(ct_area_data$ACAData_csv_Qualifying_Name) == x)]))
+
+#fix and group full_data
+fd_grouped<-fd_to_list(full_data)
 
 #Reshape and Organize Data
 gs_data2 <- clean_gsr(gs_data, c("x"), "name")
