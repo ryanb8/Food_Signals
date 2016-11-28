@@ -73,10 +73,10 @@ fd_to_list <- function(df,
   df$group_id <- do.call(paste, c(df[groups], sep = "_"))
 
   #Group by id
-  #df_grouped <- group_by(df, )
+  df_grouped <- group_by(df, group_id)
   
-  # Nested List formation
-  return(df)
+  # return grouped data
+  return(df_grouped)
 }
 
 # Grocery and restaurant Data
