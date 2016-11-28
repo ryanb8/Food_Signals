@@ -49,13 +49,13 @@ fd_to_list <- function(df,
   
   # type Conversions
   # convert all stings and doubles from factor to strings
-  df[ ,c(string, double)] <- as.character(unlist(df[ ,c(string, double)]))
+  df[ , string] <- apply(df[, string], 2, function(x) as.character(x))
   
   # covert doubles to numerics
-  df[ , double] <- as.numeric(df[ , double])
+  df[ , double] <- apply(df[, double], 2, function(f) as.numeric(levels(f))[f])
 
-  # Keep factors
-  df[ ,factor] <- as.factor(df[ ,factor])
+  # Keep factors - Unescessary
+  #df[ ,factor] <- as.factor(df[ ,factor])
   
   #Create Analysis Identifier (for grouping)
   # data is initially a frickton of dfs ontop of each other
@@ -69,6 +69,7 @@ fd_to_list <- function(df,
   # Type conversions
 
   # Nested List formation
+  return(df)
 }
 
 # Grocery and restaurant Data
