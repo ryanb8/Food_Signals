@@ -70,8 +70,11 @@ fd_to_list <- function(df,
   # the corresponding point. These are the census tracts and their data within
   # a buffer value of that given point. (see restarant and grocery data)
   # note that point data is not unique! needs other two vars to get grouping
-  df$group_id <- do.call(paste0, df[groups])
+  df$group_id <- do.call(paste, c(df[groups], sep = "_"))
 
+  #Group by id
+  #df_grouped <- group_by(df, )
+  
   # Nested List formation
   return(df)
 }
