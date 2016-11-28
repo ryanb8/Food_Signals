@@ -43,7 +43,8 @@ fd_to_list <- function(df,
                        string=string_default,
                        double=double_default,
                        factor=factor_default,
-                       chain_name="point_name"){
+                       chain_name="point_name",
+                       groups=c("point_id", "buffer_val", "point_layer")){
   # keep only desired columns
   df <- df %>% 
     select_(.dots=c(factor_default, double_default, string_default))
@@ -69,10 +70,7 @@ fd_to_list <- function(df,
   # the corresponding point. These are the census tracts and their data within
   # a buffer value of that given point. (see restarant and grocery data)
   # note that point data is not unique! needs other two vars to get grouping
-  #df$group <- 
-  
-  
-  # Type conversions
+  df$group_id <- do.call(paste0, df[groups])
 
   # Nested List formation
   return(df)
