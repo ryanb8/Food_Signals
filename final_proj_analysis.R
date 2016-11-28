@@ -4,9 +4,9 @@
 # averages on the calculations, and generates graphs.
 
 #Import data
-full_data <- read.csv("../data/Analysis_Output/real_output.csv")
-gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
-rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
+#full_data <- read.csv("../data/Analysis_Output/real_output.csv")
+#gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
+#rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
 
 #Reshape and Organize Data
 
