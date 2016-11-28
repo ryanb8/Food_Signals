@@ -9,6 +9,8 @@
 #rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
 
 #Reshape and Organize Data
+gs_data2 <- clean_gsr(gs_data, c("x"), "name")
+rr_data2 <- clean_gsr(rr_data, c("x"), "name")
 
 #Filter Data
 
