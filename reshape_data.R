@@ -115,11 +115,10 @@ fd_to_list <- function(df,
   df[ ,c(string, double)] <- as.character(unlist(df[ ,c(string, double)]))
   
   # covert doubles to numerics
-  df[ , double] <- as.numeric(df[ , double]))
+  df[ , double] <- as.numeric(df[ , double])
 
   # Keep factors
-
-  
+  df[ ,factor] <- as.factor(df[ ,factor])
   
   #Create Analysis Identifier (for grouping)
   # data is initially a frickton of dfs ontop of each other
