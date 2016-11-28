@@ -42,7 +42,8 @@ factor_default <- c(
 fd_to_list <- function(df, 
                        string=string_default,
                        double=double_default,
-                       factor=factor_default){
+                       factor=factor_default,
+                       chain_name="point_name"){
   # keep only desired columns
   df <- df %>% 
     select_(.dots=c(factor_default, double_default, string_default))
@@ -56,6 +57,11 @@ fd_to_list <- function(df,
 
   # Keep factors - Unescessary
   #df[ ,factor] <- as.factor(df[ ,factor])
+  
+  #Create Chain id
+  df$chain_id <- tolower(gsub("[[:punct:]\ ]",
+                              "",
+                              df[ , chain_name]))
   
   #Create Analysis Identifier (for grouping)
   # data is initially a frickton of dfs ontop of each other
