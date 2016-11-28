@@ -11,8 +11,8 @@ ct_area_data <- read.table("../data/Analysis_Output/ct_area_yds.txt",
                            header = TRUE,
                            sep = ",")
 
-#fix full_data
-# Remove factor in ct_area_data$
+#fix ct_area_data
+# Remove factor in ct_area_data$ACAData_csv_Qualifying_Name
 ct_area_data$ACAData_csv_Qualifying_Name <- 
   as.character(ct_area_data$ACAData_csv_Qualifying_Name)
 
@@ -22,10 +22,18 @@ ct_area_data$TractCE[which(ct_area_data$OBJECTID == 1)] <- 0
 ct_area_data$ACAData_csv_Qualifying_Name[which(
   ct_area_data$OBJECTID == 1)] <- "0"
 
+#fix full data
+# Remove factor in full_data$ACAData_csv_Qualifying_Name
+full_data$ACAData_csv_Qualifying_Name <- 
+  as.character(full_data$ACAData_csv_Qualifying_Name)
+
+# give the "None" (buffer) a real name
+full_data$ACAData_csv_Qualifying_Name[which(full_data$CT_Num == "None")] <-
+  "0"
 
 #add ct_area_yd
 full_data$ct_area_yd <- 0.0
-test <- unlist(
+full_data$ct_area_yd <- unlist(
   lapply(as.character(full_data$ACAData_csv_Qualifying_Name), 
          FUN=function(x) 
              ct_area_data$CT_area_Yds[
