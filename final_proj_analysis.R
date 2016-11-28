@@ -7,10 +7,9 @@
 #full_data <- read.csv("../data/Analysis_Output/real_output.csv")
 #gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
 #rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
-ct_area_data <- read.table("../data/Analysis_Output/ct_area_yds.txt", 
-                           header = TRUE,
-                           sep = ",")
-read.table()
+# ct_area_data <- read.table("../data/Analysis_Output/ct_area_yds.txt", 
+#                            header = TRUE,
+#                            sep = ",")
 
 #Reshape and Organize Data
 gs_data2 <- clean_gsr(gs_data, c("x"), "name")
