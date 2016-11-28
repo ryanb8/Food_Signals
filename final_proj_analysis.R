@@ -3,6 +3,9 @@
 # It imports the data created by ARCGIS, reshapes it, performs weighted
 # averages on the calculations, and generates graphs.
 
+#source:
+source("reshape_data.R")
+
 #Import data
 full_data <- read.csv("../data/Analysis_Output/real_output.csv")
 gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
