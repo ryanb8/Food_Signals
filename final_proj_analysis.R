@@ -62,7 +62,8 @@ full_data_test <- full_data[c(1:1000,
 
 
 #fix and group full_data
-fd_grouped<-fd_to_list(full_data)
+#fd_grouped<-fd_to_list(full_data)
+fd_grouped <- fd_to_list(full_data_test)
 
 #Reshape and Organize Data
 gs_data2 <- clean_gsr(gs_data, c("x"), "name")
