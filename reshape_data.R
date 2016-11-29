@@ -82,7 +82,7 @@ fd_to_list <- function(df,
   df$group_id <- do.call(paste, c(df[groups], sep = "_"))
 
   #Group by id
-  df_grouped <- group_by(df, group_id)
+  df_grouped <- dplyr::group_by(df, group_id)
   
   # return grouped data
   return(df_grouped)
