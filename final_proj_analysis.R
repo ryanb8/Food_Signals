@@ -76,12 +76,16 @@ fd_summarized <- summarise(fd_grouped,
   med_fam_inc_w = weighted.mean(med_fam_inc, prop_pop, na.rm = TRUE),
   avg_fam_inc_w = weighted.mean(avg_fam_inc, prop_pop, na.rm = TRUE),
   per_cap_inc_w = weighted.mean(per_cap_inc, prop_pop, na.rm = TRUE),
-  desc = first(point_desc),
+  point_desc = first(point_desc),
   #desc_n = n_distinct(point_desc),
   buffer = first(buffer_val),
   #buffer_n = n_distinct(buffer_val),
-  name = first(point_name)
+  name = first(point_name),
   #name_n = n_distinct(point_name)
+  chain_id = tolower(gsub("[[:punct:]\ ]",
+                              "",
+                              first(point_name)))
+  
   )
 
 #Reshape and Organize Data
@@ -90,6 +94,9 @@ rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
 
 #Join gs_data2 and rr_data2
 stores <- rbind(gs_data2, rr_data2)
+
+#Join stores and Summarys
+stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
 
 #Statistics

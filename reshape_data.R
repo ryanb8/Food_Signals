@@ -102,6 +102,9 @@ clean_gsr <- function(df, drops, chain_name, g_or_r){
                               "",
                               df[ , chain_name]))
   
+  #change Description to character
+  df$Description <- as.character(df$Description)
+  
   #Reorder (chain Id is first column,
   #rows sorted alphabetically by chain_ID)
   df <- df %>%
