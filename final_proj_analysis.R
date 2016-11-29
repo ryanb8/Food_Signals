@@ -103,4 +103,4 @@ stores_grouped <- group_by(stores, buffer, chain_id) %>% # chain_id, add=TRUE
     )
 
 #Graphs - scripting in sublime
-
+ggplot(stores_grouped[which(stores_grouped$buffer == "0.75 Miles"), ], aes(x = a_med_house_inc_w)) +geom_dotplot()
