@@ -65,9 +65,30 @@ full_data_test <- full_data[c(1:1000,
 #fd_grouped<-fd_to_list(full_data)
 fd_grouped <- fd_to_list(full_data_test)
 
+#Calc proportion population
+fd_grouped$prop_pop <- 
+  (fd_grouped$pop_real * fd_grouped$new_area)/fd_grouped$ct_area_yd
+
+#Summarized Grouped DF
+fd_summarized <- summarise(fd_grouped,
+  med_house_inc_w = weighted.mean(med_house_inc, prop_pop, na.rm = TRUE),
+  avg_house_inc_w = weighted.mean(avg_house_inc, prop_pop, na.rm = TRUE),
+  med_fam_inc_w = weighted.mean(med_fam_inc, prop_pop, na.rm = TRUE),
+  avg_fam_inc_w = weighted.mean(avg_fam_inc, prop_pop, na.rm = TRUE),
+  per_cap_inc_w = weighted.mean(per_cap_inc, prop_pop, na.rm = TRUE),
+  desc = first(point_desc),
+  #desc_n = n_distinct(point_desc),
+  buffer = first(buffer_val),
+  #buffer_n = n_distinct(buffer_val),
+  name = first(point_name)
+  #name_n = n_distinct(point_name)
+  )
+
 #Reshape and Organize Data
-gs_data2 <- clean_gsr(gs_data, c("x"), "name")
-rr_data2 <- clean_gsr(rr_data, c("x"), "name")
+gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name")
+rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name")
+
+#
 
 #Filter Data
 
