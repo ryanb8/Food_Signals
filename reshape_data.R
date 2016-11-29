@@ -44,7 +44,7 @@ fd_to_list <- function(df,
                        double=double_default,
                        factor=factor_default,
                        chain_name="point_name",
-                       groups=c("point_id", "buffer_val", "point_layer")){
+                       groups=c("point_desc", "buffer_val", "point_layer")){
   # keep only desired columns
   df <- df %>% 
     select_(.dots=c(factor, double, string))

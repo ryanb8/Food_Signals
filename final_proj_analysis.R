@@ -7,7 +7,6 @@
 source("reshape_data.R")
 
 #load pkgs
-#library(plyr)
 library(dplyr)
 
 #Import data
@@ -89,15 +88,16 @@ rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
 
 #Join gs_data2 and rr_data2
 stores <- rbind(gs_data2, rr_data2)
+stores <- distinct_(stores)
 
 #Join stores and Summarys
-stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
+stores_w_sum <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
 #filter stores
-stores$chain_id <- as.factor(stores$chain_id)
-stores_grouped <- dplyr::group_by(stores, chain_id, buffer) %>% # chain_id, add=TRUE
+stores_w_sum$chain_id <- as.factor(stores_w_sum$chain_id)
+stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>% # chain_id, add=TRUE
   dplyr::mutate(count=length(chain_id)) %>%
-  dplyr::filter(count >= 5) %>%
+  dplyr::filter(count >= 0) %>%
   dplyr::summarise(
     a_med_house_inc_w = mean(med_house_inc_w, na.rm = TRUE),
     a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),
@@ -105,13 +105,17 @@ stores_grouped <- dplyr::group_by(stores, chain_id, buffer) %>% # chain_id, add=
     a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
     a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE),
     count = first(count),
-    a_prop_pop = mean(prop_pop, na.rm = TRUE),
-    chain_id = first(chain_id)
+    a_prop_pop = mean(prop_pop, na.rm = TRUE)
     )
 
 #pass "count" back to stores for vizualization
-# stores$count <- mapvalues(stores$chain_id, stores_grouped$chain_id, stores_grouped$count)
-#   
+stores2 <- dplyr::inner_join(stores, 
+                            stores_grouped[ ,c("chain_id", "count")],
+                            by="chain_id") %>%
+  distinct_() %>%
+  arrange(chain_id)
+  
+  
 #   stores_grouped$count[match(stores$chain_id, stores_grouped$chain_id)]
 
 #Graphs - scripting in sublime
