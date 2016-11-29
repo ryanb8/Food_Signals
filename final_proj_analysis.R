@@ -97,7 +97,7 @@ stores_w_sum <- inner_join(stores, fd_summarized, by=c("Description"="point_desc
 stores_w_sum$chain_id <- as.factor(stores_w_sum$chain_id)
 stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>% # chain_id, add=TRUE
   dplyr::mutate(count=length(chain_id)) %>%
-  dplyr::filter(count >= 5) %>%
+  dplyr::filter(count >= 2) %>%
   dplyr::summarise(
     a_med_house_inc_w = mean(med_house_inc_w, na.rm = TRUE),
     a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),

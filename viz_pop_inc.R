@@ -1,5 +1,6 @@
 #Vizualize population vs income
 library(ggplot2)
+library(gganimate)
 
 #COUNT FILTER IS ON PRIOR PAGE
 
@@ -13,7 +14,7 @@ buf_vals <- c("0.25 Miles", "0.75 Miles", "1.5 Miles", "3 Miles", "5 Miles")
 dfp <- stores_buf_order[which(stores_buf_order$buffer == buf_vals[2]), ]
 #G vs R
 pop_inc_plot <- ggplot(dfp,aes(prop_pop, per_cap_inc_w)) +
-  geom_point(aes(colour = type), size = 1) +
+  geom_point(aes(colour = type), size = 1.25) +
   ggtitle(paste0("Population and Per Capita Income 
 for Restaurants and Grocery Stores
 in Buffer Range of ", dfp[1, "buffer"],
