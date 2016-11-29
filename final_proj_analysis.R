@@ -90,7 +90,7 @@ stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
 #filter stores
 stores$chain_id <- as.factor(stores$chain_id)
-stores_grouped <- group_by(stores, chain_id, buffer) %>% # chain_id, add=TRUE
+stores_grouped <- group_by(stores, buffer, chain_id) %>% # chain_id, add=TRUE
   mutate(count=length(chain_id)) %>%
   filter(count >= 5) %>%
   summarise(
@@ -102,5 +102,5 @@ stores_grouped <- group_by(stores, chain_id, buffer) %>% # chain_id, add=TRUE
     count = first(count)
     )
 
-#Graphs
+#Graphs - scripting in sublime
 
