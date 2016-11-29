@@ -76,7 +76,7 @@ fd_summarized <- summarise(fd_grouped,
   #buffer_n = n_distinct(buffer_val),
   name = first(point_name),
   #name_n = n_distinct(point_name)
-  prop_pop = sum(prop_pop)
+  prop_pop = sum(prop_pop, na.rm = TRUE)
   )
 
 #Reshape and Organize Data
@@ -100,7 +100,8 @@ stores_grouped <- group_by(stores, buffer, chain_id) %>% # chain_id, add=TRUE
     a_med_fam_inc_w = mean(med_fam_inc_w, na.rm = TRUE),
     a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
     a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE),
-    count = first(count)
+    count = first(count),
+    a_prop_pop = mean(prop_pop, na.rm = TRUE)
     )
 
 #Graphs - scripting in sublime
