@@ -74,8 +74,9 @@ fd_summarized <- summarise(fd_grouped,
   #desc_n = n_distinct(point_desc),
   buffer = first(buffer_val),
   #buffer_n = n_distinct(buffer_val),
-  name = first(point_name)
+  name = first(point_name),
   #name_n = n_distinct(point_name)
+  prop_pop = sum(prop_pop)
   )
 
 #Reshape and Organize Data
