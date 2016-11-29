@@ -54,20 +54,10 @@ full_data$ct_area_yd <- unlist(
 #generate test data
 #############################################################################
 #############################################################################
-full_data_test <- full_data[c(1:1000,
-                              100000:102000,
-                              305000:304000,
-                              870000:878000,
-                              1050000:1053556), ]
-full_data_zaxbys <- full_data[which(full_data$point_name == "Zaxby's"),]
-full_data_zaxbys <- full_data[c(
-  which(full_data$point_name == "Burger King"),
-  which(full_data$point_name == "Zaxby's")), ]
-full_data_test <- full_data_zaxbys
 
 #fix and group full_data
 #fd_grouped<-fd_to_list(full_data)
-fd_grouped <- fd_to_list(full_data_test)
+fd_grouped <- fd_to_list(full_data)
 
 #Calc proportion population
 fd_grouped$prop_pop <- 
