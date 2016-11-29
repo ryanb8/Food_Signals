@@ -95,7 +95,17 @@ stores <- rbind(gs_data2, rr_data2)
 stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
 #filter stores
-stores_g5 <- filter(stores, )
+stores$chain_id <- as.factor(stores$chain_id)
+stores_grouped <- group_by(stores, chain_id) %>%
+  mutate(count=length(chain_id)) %>%
+  filter(count >= 5) %>%
+  summarise(
+    a_med_house_inc_w = mean(med_house_inc_w, na.rm = TRUE),
+    a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),
+    a_med_fam_inc_w = mean(med_fam_inc_w, na.rm = TRUE),
+    a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
+    a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
+    )
 
 #Statistics
 
