@@ -63,18 +63,15 @@ full_data_zaxbys <- full_data[which(full_data$point_name == "Zaxby's"),]
 full_data_zaxbys <- full_data[c(
   which(full_data$point_name == "Burger King"),
   which(full_data$point_name == "Zaxby's")), ]
+full_data <- full_data_zaxbys
 
 #fix and group full_data
 #fd_grouped<-fd_to_list(full_data)
 fd_grouped <- fd_to_list(full_data_test)
-fd_grouped_z <- fd_to_list(full_data_zaxbys)
 
 #Calc proportion population
 fd_grouped$prop_pop <- 
   (fd_grouped$pop_real * fd_grouped$new_area)/fd_grouped$ct_area_yd
-
-fd_grouped_z$prop_pop <- 
-  (fd_grouped_z$pop_real * fd_grouped_z$new_area)/fd_grouped_z$ct_area_yd
 
 #Summarized Grouped DF
 fd_summarized <- summarise(fd_grouped,
@@ -156,3 +153,4 @@ stores_grouped_z <- group_by(stores_z, chain_id, buffer) %>% # chain_id, add=TRU
     )
 
 #Graphs
+
