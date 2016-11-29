@@ -6,6 +6,10 @@
 #source:
 source("reshape_data.R")
 
+#load pkgs
+library(plyr)
+library(dplyr)
+
 #Import data
 #############################################################################
 #############################################################################
@@ -101,8 +105,14 @@ stores_grouped <- group_by(stores, buffer, chain_id) %>% # chain_id, add=TRUE
     a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
     a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE),
     count = first(count),
-    a_prop_pop = mean(prop_pop, na.rm = TRUE)
+    a_prop_pop = mean(prop_pop, na.rm = TRUE),
+    chain_id = first(chain_id)
     )
+
+#pass "count" back to stores for vizualization
+stores$count <- mapvalues(stores$chain_id, stores_grouped$chain_id, stores_grouped$count)
+  
+  stores_grouped$count[match(stores$chain_id, stores_grouped$chain_id)]
 
 #Graphs - scripting in sublime
 ggplot(stores_grouped[which(stores_grouped$buffer == "0.75 Miles"), ], aes(x = a_med_house_inc_w)) +geom_dotplot()
