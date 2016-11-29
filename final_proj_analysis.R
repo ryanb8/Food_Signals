@@ -7,6 +7,12 @@
 source("reshape_data.R")
 
 #Import data
+#############################################################################
+#############################################################################
+#######NOTE - Next time, turn strings as factors off. Idiot.#################
+#############################################################################
+#############################################################################
+
 full_data <- read.csv("../data/Analysis_Output/real_output.csv")
 gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
 rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
