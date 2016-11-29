@@ -53,8 +53,8 @@ full_data$ct_area_yd <- unlist(
 fd_grouped<-fd_to_list(full_data)
 
 #Reshape and Organize Data
-gs_data2 <- clean_gsr(gs_data, c("x"), "name")
-rr_data2 <- clean_gsr(rr_data, c("x"), "name")
+gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name")
+rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name")
 
 #Filter Data
 
