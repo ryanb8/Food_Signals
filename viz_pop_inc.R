@@ -22,6 +22,13 @@ in Buffer Range of ", dfp[1, "buffer"],
   labs(x = "Est. Population in Service Area", y = "Weighted Per Capita Income ($)")
 pop_inc_plot
 
+pop_inc_plot <- ggplot(stores_buf_order, aes(prop_pop, per_cap_inc_w)) +
+  geom_point(aes(colour = type, frame=buffer), size = 1.25) +
+  ggtitle("Population and Per Capita Income for Food Service Establishments \nBuffer Range:\n\t ") +
+  labs(x = "Log Est. Population in Service Area", 
+       y = "Weighted Per Capita Income ($)") +
+  scale_x_log10()
+
 #Count
 dfp <- stores_buf_order[which(stores_buf_order$buffer == buf_vals[4]), ]
 pop_inc_plot <- ggplot(dfp, aes(prop_pop, per_cap_inc_w)) +
