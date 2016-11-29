@@ -59,18 +59,39 @@ full_data_test <- full_data[c(1:1000,
                               305000:304000,
                               870000:878000,
                               1050000:1053556), ]
-
+full_data_zaxbys <- full_data[which(full_data$point_name == "Zaxby's"),]
+full_data_zaxbys <- full_data[c(
+  which(full_data$point_name == "Burger King"),
+  which(full_data$point_name == "Zaxby's")), ]
 
 #fix and group full_data
 #fd_grouped<-fd_to_list(full_data)
 fd_grouped <- fd_to_list(full_data_test)
+fd_grouped_z <- fd_to_list(full_data_zaxbys)
 
 #Calc proportion population
 fd_grouped$prop_pop <- 
   (fd_grouped$pop_real * fd_grouped$new_area)/fd_grouped$ct_area_yd
 
+fd_grouped_z$prop_pop <- 
+  (fd_grouped_z$pop_real * fd_grouped_z$new_area)/fd_grouped_z$ct_area_yd
+
 #Summarized Grouped DF
 fd_summarized <- summarise(fd_grouped,
+  med_house_inc_w = weighted.mean(med_house_inc, prop_pop, na.rm = TRUE),
+  avg_house_inc_w = weighted.mean(avg_house_inc, prop_pop, na.rm = TRUE),
+  med_fam_inc_w = weighted.mean(med_fam_inc, prop_pop, na.rm = TRUE),
+  avg_fam_inc_w = weighted.mean(avg_fam_inc, prop_pop, na.rm = TRUE),
+  per_cap_inc_w = weighted.mean(per_cap_inc, prop_pop, na.rm = TRUE),
+  point_desc = first(point_desc),
+  #desc_n = n_distinct(point_desc),
+  buffer = first(buffer_val),
+  #buffer_n = n_distinct(buffer_val),
+  name = first(point_name)
+  #name_n = n_distinct(point_name)
+  )
+
+fd_summarized_z <- summarise(fd_grouped_z,
   med_house_inc_w = weighted.mean(med_house_inc, prop_pop, na.rm = TRUE),
   avg_house_inc_w = weighted.mean(avg_house_inc, prop_pop, na.rm = TRUE),
   med_fam_inc_w = weighted.mean(med_fam_inc, prop_pop, na.rm = TRUE),
@@ -92,11 +113,24 @@ rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
 stores <- rbind(gs_data2, rr_data2)
 
 #Join stores and Summarys
-stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
+stores_t <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
+stores_z <- inner_join(stores, fd_summarized_z, by=c("Description"="point_desc"))
 
 #filter stores
-stores$chain_id <- as.factor(stores$chain_id)
-stores_grouped <- group_by(stores, chain_id) %>%
+#stores$chain_id <- as.factor(stores$chain_id)
+# stores_grouped <- group_by(stores, chain_id, buffer) %>% # chain_id, add=TRUE
+#   mutate(count=length(chain_id)) %>%
+#   filter(count >= 5) %>%
+#   summarise(
+#     a_med_house_inc_w = mean(med_house_inc_w, na.rm = TRUE),
+#     a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),
+#     a_med_fam_inc_w = mean(med_fam_inc_w, na.rm = TRUE),
+#     a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
+#     a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
+#     )
+
+stores$chain_id_t <- as.factor(stores_t$chain_id)
+stores_grouped_t <- group_by(stores_t, chain_id, buffer) %>% # chain_id, add=TRUE
   mutate(count=length(chain_id)) %>%
   filter(count >= 5) %>%
   summarise(
@@ -107,6 +141,16 @@ stores_grouped <- group_by(stores, chain_id) %>%
     a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
     )
 
-#Statistics
+stores$chain_id_z <- as.factor(stores_z$chain_id)
+stores_grouped_z <- group_by(stores_z, chain_id, buffer) %>% # chain_id, add=TRUE
+  mutate(count=length(chain_id)) %>%
+  filter(count >= 5) %>%
+  summarise(
+    a_med_house_inc_w = mean(med_house_inc_w, na.rm = TRUE),
+    a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),
+    a_med_fam_inc_w = mean(med_fam_inc_w, na.rm = TRUE),
+    a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
+    a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
+    )
 
 #Graphs
