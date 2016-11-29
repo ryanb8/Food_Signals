@@ -63,6 +63,7 @@ fd_to_list <- function(df,
       f
     }
   })
+  
 
   # Keep factors - Unescessary
   #df[ ,factor] <- as.factor(df[ ,factor])

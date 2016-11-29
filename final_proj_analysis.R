@@ -7,7 +7,7 @@
 source("reshape_data.R")
 
 #load pkgs
-library(plyr)
+#library(plyr)
 library(dplyr)
 
 #Import data
@@ -68,18 +68,18 @@ fd_grouped$prop_pop <-
   (fd_grouped$pop_real * fd_grouped$new_area)/fd_grouped$ct_area_yd
 
 #Summarized Grouped DF
-fd_summarized <- summarise(fd_grouped,
+fd_summarized <- dplyr::summarise(fd_grouped,
   med_house_inc_w = weighted.mean(med_house_inc, prop_pop, na.rm = TRUE),
   avg_house_inc_w = weighted.mean(avg_house_inc, prop_pop, na.rm = TRUE),
   med_fam_inc_w = weighted.mean(med_fam_inc, prop_pop, na.rm = TRUE),
   avg_fam_inc_w = weighted.mean(avg_fam_inc, prop_pop, na.rm = TRUE),
   per_cap_inc_w = weighted.mean(per_cap_inc, prop_pop, na.rm = TRUE),
   point_desc = first(point_desc),
-  #desc_n = n_distinct(point_desc),
+  # #desc_n = n_distinct(point_desc),
   buffer = first(buffer_val),
-  #buffer_n = n_distinct(buffer_val),
+  # #buffer_n = n_distinct(buffer_val),
   name = first(point_name),
-  #name_n = n_distinct(point_name)
+  # #name_n = n_distinct(point_name)
   prop_pop = sum(prop_pop, na.rm = TRUE)
   )
 
@@ -95,7 +95,7 @@ stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
 #filter stores
 stores$chain_id <- as.factor(stores$chain_id)
-stores_grouped <- group_by(stores, buffer, chain_id) %>% # chain_id, add=TRUE
+stores_grouped <- group_by(stores, chain_id, buffer) %>% # chain_id, add=TRUE
   mutate(count=length(chain_id)) %>%
   filter(count >= 5) %>%
   summarise(
@@ -110,9 +110,9 @@ stores_grouped <- group_by(stores, buffer, chain_id) %>% # chain_id, add=TRUE
     )
 
 #pass "count" back to stores for vizualization
-stores$count <- mapvalues(stores$chain_id, stores_grouped$chain_id, stores_grouped$count)
-  
-  stores_grouped$count[match(stores$chain_id, stores_grouped$chain_id)]
+# stores$count <- mapvalues(stores$chain_id, stores_grouped$chain_id, stores_grouped$count)
+#   
+#   stores_grouped$count[match(stores$chain_id, stores_grouped$chain_id)]
 
 #Graphs - scripting in sublime
-ggplot(stores_grouped[which(stores_grouped$buffer == "0.75 Miles"), ], aes(x = a_med_house_inc_w)) +geom_dotplot()
+#ggplot(stores_grouped[which(stores_grouped$buffer == "0.75 Miles"), ], aes(x = a_med_house_inc_w)) +geom_dotplot()
