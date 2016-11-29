@@ -129,7 +129,7 @@ stores_z <- inner_join(stores, fd_summarized_z, by=c("Description"="point_desc")
 #     a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
 #     )
 
-stores$chain_id_t <- as.factor(stores_t$chain_id)
+stores_t$chain_id_t <- as.factor(stores_t$chain_id)
 stores_grouped_t <- group_by(stores_t, chain_id, buffer) %>% # chain_id, add=TRUE
   mutate(count=length(chain_id)) %>%
   filter(count >= 5) %>%
@@ -138,10 +138,11 @@ stores_grouped_t <- group_by(stores_t, chain_id, buffer) %>% # chain_id, add=TRU
     a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),
     a_med_fam_inc_w = mean(med_fam_inc_w, na.rm = TRUE),
     a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
-    a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
+    a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE),
+    count = first(count)
     )
 
-stores$chain_id_z <- as.factor(stores_z$chain_id)
+stores_z$chain_id_z <- as.factor(stores_z$chain_id)
 stores_grouped_z <- group_by(stores_z, chain_id, buffer) %>% # chain_id, add=TRUE
   mutate(count=length(chain_id)) %>%
   filter(count >= 5) %>%
@@ -150,7 +151,8 @@ stores_grouped_z <- group_by(stores_z, chain_id, buffer) %>% # chain_id, add=TRU
     a_avg_house_inc_w = mean(avg_house_inc_w, na.rm = TRUE),
     a_med_fam_inc_w = mean(med_fam_inc_w, na.rm = TRUE),
     a_avg_fam_inc_w = mean(avg_fam_inc_w, na.rm = TRUE),
-    a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE)
+    a_per_cap_inc_w = mean(per_cap_inc_w, na.rm = TRUE),
+    count = first(count)
     )
 
 #Graphs
