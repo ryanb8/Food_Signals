@@ -80,12 +80,8 @@ fd_summarized <- summarise(fd_grouped,
   #desc_n = n_distinct(point_desc),
   buffer = first(buffer_val),
   #buffer_n = n_distinct(buffer_val),
-  name = first(point_name),
+  name = first(point_name)
   #name_n = n_distinct(point_name)
-  chain_id = tolower(gsub("[[:punct:]\ ]",
-                              "",
-                              first(point_name)))
-  
   )
 
 #Reshape and Organize Data
@@ -98,6 +94,8 @@ stores <- rbind(gs_data2, rr_data2)
 #Join stores and Summarys
 stores <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
+#filter stores
+stores_g5 <- filter(stores, )
 
 #Statistics
 
