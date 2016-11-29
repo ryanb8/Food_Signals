@@ -85,12 +85,12 @@ fd_summarized <- summarise(fd_grouped,
   )
 
 #Reshape and Organize Data
-gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name")
-rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name")
+gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name", "G")
+rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
 
-#
+#Join gs_data2 and rr_data2
+stores <- rbind(gs_data2, rr_data2)
 
-#Filter Data
 
 #Statistics
 

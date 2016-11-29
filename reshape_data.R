@@ -88,7 +88,7 @@ fd_to_list <- function(df,
 }
 
 # Grocery and restaurant Data
-clean_gsr <- function(df, drops, chain_name){
+clean_gsr <- function(df, drops, chain_name, g_or_r){
   #df is data frame
   #drops is vector of column names to be dropped
   #chain_name is the column name of the column providing the store name
@@ -107,6 +107,9 @@ clean_gsr <- function(df, drops, chain_name){
   df <- df %>%
     select(chain_id, everything()) %>%
     arrange(chain_id)
+  
+  #add Grocery or Restaurant
+  df$type <- g_or_r
                       
   return(df)
 }
