@@ -30,8 +30,8 @@ pop_inc_plot <- ggplot(stores_buf_order, aes(prop_pop, per_cap_inc_w)) +
     "Population and Per Capita Income",
     "for Food Service Establishments",
     "Buffer Range: "), collapse ="\n"))+
-  labs(x = "Log Est. Population in Service Area", 
-       y = "Weighted Per Capita Income ($)") +
+  labs(x = "Log of Population in Service Area", 
+       y = "Per Capita Income ($)") +
   scale_x_log10() +
   guides(colour = guide_legend(
     title="Store Type",
