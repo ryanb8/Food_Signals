@@ -93,7 +93,8 @@ for (i in 1:length(buf_vals)){
 #get lengend from oringal gif plot
 p_legend <- g_legend(pop_inc_plot) 
 
-#pdf("filename.pdf")
+png(filename="../5frameGrid_PopInc.png",
+    width = 740, height = 600)
 grid.arrange(plot_holder[[1]], 
              plot_holder[[2]],
              plot_holder[[3]],
@@ -115,10 +116,10 @@ grid.arrange(plot_holder[[1]],
                ), collapse ="\n"),
              gp =gpar(fontsize=8))
              )
-             
-#dev.off()
+dev.off()
 
 
+#What is this???
 #Count
 dfp <- stores_buf_order[which(stores_buf_order$buffer == buf_vals[4]), ]
 pop_inc_plot <- ggplot(dfp, aes(prop_pop, per_cap_inc_w)) +
