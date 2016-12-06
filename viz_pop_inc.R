@@ -94,7 +94,7 @@ for (i in 1:length(buf_vals)){
 p_legend <- g_legend(pop_inc_plot) 
 
 png(filename="../5frameGrid_PopInc.png",
-    width = 740, height = 600)
+    width = 555, height = 450)
 grid.arrange(plot_holder[[1]], 
              plot_holder[[2]],
              plot_holder[[3]],
