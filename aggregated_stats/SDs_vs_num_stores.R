@@ -17,7 +17,9 @@ library(ggplot2)
 library(stats)
 
 #parameters
-plot_buffer_value <- "1.5 Miles" #options from table(stores_w_sum$buffer)
+buf_vals <- c("0.25 Miles", "0.75 Miles", "1.5 Miles", "3 Miles", "5 Miles")
+current_buffer <- 3
+plot_buffer_value <- buf_vals[current_buffer]
 more_than_x_stores <- 5
 x_lims <- c(5,375)
 y_lims <- c(-2,3)
@@ -25,7 +27,8 @@ widthpx <- 555
 heightpx <- 450
 fname <- "SD_v_ChainFreq.png"  #end in .png
 
-#Gathering & filter data using buffer value and more_than_x_stores
+# Gathering & filter data using buffer value and more_than_x_stores 
+#   throw out small chains
 filtered_by_est_count <- 
   dplyr::filter(stores_w_sum, buffer == plot_buffer_value) %>%
   dplyr::group_by(chain_id) %>% 
