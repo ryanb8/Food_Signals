@@ -23,7 +23,14 @@ full_data <- read.csv("../data/real_output.csv") #from ArcPy
 # Full data is effectivelly nested tables, though in database form. 
 #   For each buffer establishment pair, there is a list of tracts and their
 #   population, census, and ACS data 
-#   data keys: buffer_val, point_id, Tract CE
+#   data keys: buffer_val, point_id, point_layer, Tract CE
+#     buffer_val: buffer distance as string (e.g. "0.25 Miles")
+#     point_id: unique id of an establishment (integer)
+#     point_layer: factor with values either:
+#       "layer0": grocery store
+#       "layer1": restaurant
+#       ensures that restaurants and grocery stores with same name aren't merged
+#     Tract CE: Factor, 6 digit string identifying unique census tract
 #   BUG: Area in Yds not included in data
 gs_data <- read.csv("../data/bao_grocery.csv") #Grocery Stores (BAO)
 rr_data <- read.csv("../data/bao_restaurant.csv") #Restaurants (BAO)
@@ -35,8 +42,14 @@ ct_area_data <- read.table("../data/ct_area_yds.txt",
 # Clean Data
 #############################################################################
 #Clean Grocery Store & Restauratn
-  gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name", "G")
-  rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
+  gs_data2 <- clean_gsr(df = gs_data, 
+                        drops = c("X", "Object_ID"), 
+                        chain_name = "Name", 
+                        g_or_r = "G")
+  rr_data2 <- clean_gsr(df = rr_data, 
+                        drops = c("X", "Object_ID"), 
+                        chain_name = "Name", 
+                        g_or_r = "R")
   
   #Join gs_data2 and rr_data2
   stores <- rbind(gs_data2, rr_data2)
@@ -130,8 +143,9 @@ stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>%
     )
 
 #pass "count" back to stores data for vizualization
-stores2 <- dplyr::inner_join(stores_w_sum, 
-                            stores_grouped[ ,c("chain_id", "count")],
-                            by="chain_id") %>%
+stores2 <- 
+  dplyr::inner_join(stores_w_sum, 
+                    stores_grouped[ ,c("chain_id", "count")],
+                    by="chain_id") %>%
   distinct_() %>%
   arrange(chain_id)
