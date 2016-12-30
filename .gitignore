@@ -1,6 +1,14 @@
+# Ignore R Project Data
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-aggregated_stats/Aggr_Analysis.Rproj
+/aggregated_stats/Aggr_Analysis.Rproj
+
+# Ignore compliled Python data
 buffer_analysis/domainvalues.pyc
+
+# Ignore large & possibly proprietary data files
+/data/*
+!/data/data_note.txt
+!/data/ct_area_yds.txt
