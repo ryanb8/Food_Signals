@@ -3,70 +3,98 @@
 # It imports the data created by ARCGIS, reshapes it, performs weighted
 # averages on the calculations, and generates graphs.
 
-#source:
+# This script imports, cleans, orders, and summarizes data.
+# Graphs are called from other scripts on data prepared in this script.
+
+# Author: Ryan Boyer
+# Last Update: 12/30/2016
+
+# source:
 source("reshape_data.R")
 
-#load pkgs
+# load pkgs
 library(dplyr)
 
-#Import data
 #############################################################################
+# Import data
+# NOTE - Next time, turn strings as factors off.
 #############################################################################
-#######NOTE - Next time, turn strings as factors off. Idiot.#################
-#############################################################################
-#############################################################################
-
-full_data <- read.csv("../data/Analysis_Output/real_output.csv")
-gs_data <- read.csv("../data/BAO/cleaned/bao_grocery.csv")
-rr_data <- read.csv("../data/BAO/cleaned/bao_restaurant.csv")
-ct_area_data <- read.table("../data/Analysis_Output/ct_area_yds.txt",
+full_data <- read.csv("../data/real_output.csv") #from ArcPy 
+# Full data is effectivelly nested tables, though in database form. 
+#   For each buffer establishment pair, there is a list of tracts and their
+#   population, census, and ACS data 
+#   data keys: buffer_val, point_id, Tract CE
+#   BUG: Area in Yds not included in data
+gs_data <- read.csv("../data/bao_grocery.csv") #Grocery Stores (BAO)
+rr_data <- read.csv("../data/bao_restaurant.csv") #Restaurants (BAO)
+ct_area_data <- read.table("../data/ct_area_yds.txt",
                            header = TRUE,
-                           sep = ",")
-
-#fix ct_area_data
-# Remove factor in ct_area_data$ACAData_csv_Qualifying_Name
-ct_area_data$ACAData_csv_Qualifying_Name <- 
-  as.character(ct_area_data$ACAData_csv_Qualifying_Name)
-
-#replace buffer (OBJECTID=1) with 0 for all values
-ct_area_data$CT_Num[which(ct_area_data$OBJECTID == 1)] <- 0
-ct_area_data$TractCE[which(ct_area_data$OBJECTID == 1)] <- 0
-ct_area_data$ACAData_csv_Qualifying_Name[which(
-  ct_area_data$OBJECTID == 1)] <- "0"
-
-#fix full data
-# Remove factor in full_data$ACAData_csv_Qualifying_Name
-full_data$ACAData_csv_Qualifying_Name <- 
-  as.character(full_data$ACAData_csv_Qualifying_Name)
-
-# give the "None" (buffer) a real name
-full_data$ACAData_csv_Qualifying_Name[which(full_data$CT_Num == "None")] <-
-  "0"
-
-#add ct_area_yd
-full_data$ct_area_yd <- 0.0
-full_data$ct_area_yd <- unlist(
-  lapply(as.character(full_data$ACAData_csv_Qualifying_Name), 
-         FUN=function(x) 
-             ct_area_data$CT_area_Yds[
-               which(
-                 as.character(ct_area_data$ACAData_csv_Qualifying_Name) == x)]))
+                           sep = ",") #Census Tract data
 
 #############################################################################
+# Clean Data
 #############################################################################
-#generate test data
-#############################################################################
-#############################################################################
+#Clean Grocery Store & Restauratn
+  gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name", "G")
+  rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
+  
+  #Join gs_data2 and rr_data2
+  stores <- rbind(gs_data2, rr_data2)
+  stores <- distinct_(stores)
 
-#fix and group full_data
-#fd_grouped<-fd_to_list(full_data)
+# Clean Census Tract Data
+  # Remove factor in Tract name
+  ct_area_data$ACAData_csv_Qualifying_Name <- 
+    as.character(ct_area_data$ACAData_csv_Qualifying_Name)
+  
+  # Replace buffer (OBJECTID=1) with 0 for all values
+  # The buffer tract represents a 5 mile boundary band around the entire region.
+  # In the analysis, it's assumed that it has a population of 0 and thus does not
+  #   factor into the weights and calculations. 
+  # Assigning it's name to 0 gives it a non-empty name for join matching.
+  ct_area_data$CT_Num[which(ct_area_data$OBJECTID == 1)] <- 0
+  ct_area_data$TractCE[which(ct_area_data$OBJECTID == 1)] <- 0
+  ct_area_data$ACAData_csv_Qualifying_Name[which(
+    ct_area_data$OBJECTID == 1)] <- "0"
+
+# Clean Full data (From ArcPy)
+  # Remove factor in tract name
+  full_data$ACAData_csv_Qualifying_Name <- 
+    as.character(full_data$ACAData_csv_Qualifying_Name)
+  
+  # Give the "None" (buffer) a real name of "0" which matches Census Data
+  full_data$ACAData_csv_Qualifying_Name[which(full_data$CT_Num == "None")] <-
+    "0"
+  
+  # Pull ct_area_yd (tract area in square yards) from CT data to Full data
+  #   This is the only tract data required from ct_area_data
+  #   BUG/IDEA: Really, this should be pulled in with all the other data from
+  #     ArcPy script.
+  full_data$ct_area_yd <- 0.0
+  full_data$ct_area_yd <-
+    unlist(lapply(
+      as.character(full_data$ACAData_csv_Qualifying_Name),
+      FUN = function(x)
+        ct_area_data$CT_area_Yds[which(
+          as.character(ct_area_data$ACAData_csv_Qualifying_Name) == x
+          )]
+    ))
+
+#############################################################################
+# Group, Organize, & Summarize Data
+#############################################################################
+# group by buffer val/establishment pair via reshape_data.R
+# only keep desired columns and convert to appropriate (numeric, char, etc.)
 fd_grouped <- fd_to_list(full_data)
 
-#Calc proportion population
+# Calc proportional population for each tract in buffer val/establishment pair 
+#    (population in area within buffer, assuming even distribution of people
+#    within census tract)
 fd_grouped$prop_pop <- 
   (fd_grouped$pop_real * fd_grouped$new_area)/fd_grouped$ct_area_yd
 
-#Summarized Grouped DF
+# Summarized Grouped DF
+#   For each establishment/buffer-val pair calculate statistics
 fd_summarized <- dplyr::summarise(fd_grouped,
   med_house_inc_w = weighted.mean(med_house_inc, prop_pop, na.rm = TRUE),
   avg_house_inc_w = weighted.mean(avg_house_inc, prop_pop, na.rm = TRUE),
@@ -82,20 +110,12 @@ fd_summarized <- dplyr::summarise(fd_grouped,
   prop_pop = sum(prop_pop, na.rm = TRUE)
   )
 
-#Reshape and Organize Data
-gs_data2 <- clean_gsr(gs_data, c("X", "Object_ID"), "Name", "G")
-rr_data2 <- clean_gsr(rr_data, c("X", "Object_ID"), "Name", "R")
-
-#Join gs_data2 and rr_data2
-stores <- rbind(gs_data2, rr_data2)
-stores <- distinct_(stores)
-
 #Join stores and Summarys
 stores_w_sum <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
 
-#filter stores
+#Get Chain Level statistics for each buffer value
 stores_w_sum$chain_id <- as.factor(stores_w_sum$chain_id)
-stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>% # chain_id, add=TRUE
+stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>%
   dplyr::mutate(count=length(chain_id)) %>%
   dplyr::filter(count >= 2) %>%
   dplyr::summarise(
@@ -109,15 +129,9 @@ stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>% # chain_id
     type = first(type)
     )
 
-#pass "count" back to stores for vizualization
+#pass "count" back to stores data for vizualization
 stores2 <- dplyr::inner_join(stores_w_sum, 
                             stores_grouped[ ,c("chain_id", "count")],
                             by="chain_id") %>%
   distinct_() %>%
   arrange(chain_id)
-  
-  
-#   stores_grouped$count[match(stores$chain_id, stores_grouped$chain_id)]
-
-#Graphs - scripting in sublime
-#ggplot(stores_grouped[which(stores_grouped$buffer == "0.75 Miles"), ], aes(x = a_med_house_inc_w)) +geom_dotplot()
