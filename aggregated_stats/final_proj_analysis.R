@@ -138,7 +138,8 @@ unique(fd_summarized$point_desc[!(fd_summarized$point_desc %in% stores$Descripti
 # Group, Organize, & Summarize Chain Level Statitics
 ############################################################################# 
 
-#Get Chain Level statistics for each buffer value
+# Get Chain Level statistics for each buffer value
+# Chains have AT LEAST 2 establishments
 stores_w_sum$chain_id <- as.factor(stores_w_sum$chain_id)
 stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>%
   dplyr::mutate(count=length(chain_id)) %>%
