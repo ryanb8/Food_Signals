@@ -15,14 +15,15 @@ html5lib
 
 
 Changelog:      Initial Version 2016 11 14
-                Final Version 2016 11 15
+                Final Version 2016 12 31
 """
 
+# Packages
 import os
 import pandas as pd
 import bs4
 
-# Globals
+# Parameters - Unique to ESRI BAO's HTML
 table_tag = "td"
 field_tags = ["Name", "Street", "City", "State_Name", "Zip", "NAICS", "SIC",
               "Employee_Number", "Sales_Volume", "Latitude", "Longitude",
@@ -76,6 +77,7 @@ def get_data(files):
     for file in files:
         print("file is")
         print(file)
+        print("making data frame")
         print("\n")
         if os.path.isfile(file):
             soup = bs4.BeautifulSoup(open(file), "html5lib")
@@ -84,7 +86,6 @@ def get_data(files):
                 tag = field_tags[i]
                 all_tags = soup.find_all(table_tag, attrs=field_tag_dict[tag])
                 data[tag] = [tag.string for tag in all_tags]
-            print("making data frame")
             data_list.append(pd.DataFrame(data))
         else:
             error_flag = True
@@ -97,63 +98,47 @@ def get_data(files):
     return data, error_flag, error_files
 
 
+def process_html(file_list):
+    """
+    Scrapes the good stuff out of the HTML, saves it in a pandas DF
+
+    :param file_list: list of file paths to be scraped & melded into one pd df
+    :return: pd df of data
+    """
+    (data, error_flag, error_files) = get_data(file_list)
+    print("Error flag was {} for file list containing {}".format(error_flag,
+                                                                 file_list[0]))
+    if error_flag:
+        print("Files with errors are: {}".format(error_files))
+        print(error_files)
+    return data
+
+
 def main():
-    # Get Data
-    base_path_grocery = ("/Users/Ryan/Documents/003_Charlottesville/"
-                         "UVA/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
-                         "data/BAO/raw/v2/Grocery")
-    base_path_restaur = ("/Users/Ryan/Documents/003_Charlottesville/"
-                         "UVA/2016 Fall Semester/PLAN5120_GIS/Final_Project/"
-                         "data/BAO/raw/v2/Restaurant")
-    # doc_tags = {"grocery": [
-    #     os.path.join(base_path_grocery, ('0' + str(i + 1))[-2:] + ".html") for
-    #     i in range(27)]}
-    doc_tags = {"restaurant": [
+    # Grocery
+    # Get Files
+    base_path_grocery = "../data/BAO_raw/Grocery"
+    groc_files = [
+        os.path.join(base_path_grocery, ('0' + str(i + 1))[-2:] + ".html") for
+        i in range(27)]
+    # Scrape
+    groc_data = process_html(groc_files)
+    # Export
+    groc_data.to_csv(path_or_buf="../data/bao_grocery.csv",
+                     sep=",")
+
+    # Restaurants
+    # Get Files
+    base_path_restaur = "../data/BAO_raw/Restaurant"
+    rest_files = [
         os.path.join(base_path_restaur, ('0' + str(i + 1))[-2:] + ".html") for
-        i in range(27)]}
+        i in range(27)]
+    # Scrape
+    rest_data = process_html(rest_files)
+    # Export
+    rest_data.to_csv(path_or_buf="../data/bao_restaurant.csv",
+                     sep=",")
 
-
-    # doc_tags = {"grocery": [
-    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO/"
-    #                  "business/AtlantaGroceryStores.html")],
-    #             "restaurant": [
-    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-    #                  "/business/Restaurants(1).html"),
-    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-    #                  "/business/Restaurants(2).html"),
-    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-    #                  "/business/Restaurants(3).html"),
-    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-    #                  "/business/Restaurants(4).html"),
-    #                 ("/Users/Ryan/Documents/003_Charlottesville/UVA/2016 "
-    #                  "Fall Semester/PLAN5120_GIS/Final_Project/data/BAO"
-    #                  "/business/Restaurants(5).html")
-    #             ]
-    #             }
-
-    # Get data
-    all_data = []
-    for key in doc_tags:
-        files = doc_tags[key]
-        (data, error_flag, error_files) = get_data(files)
-        all_data.append(data)
-        print("Error flag for {} key was {}".format(key, error_flag))
-        if error_flag:
-            print("Files with errors are: {}".format(error_files))
-            print(error_files)
-        print("data length was")
-        print(len(data))
-
-    # export data
-    for i in range(len(all_data)):
-        fpath = "/Users/Ryan/Desktop/bao" + str(i) + ".csv"
-        all_data[i].to_csv(path_or_buf=fpath,
-                           sep=",")
 
 if __name__ == "__main__":
     main()
