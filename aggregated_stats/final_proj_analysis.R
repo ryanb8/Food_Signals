@@ -7,7 +7,7 @@
 # Graphs are called from other scripts on data prepared in this script.
 
 # Author: Ryan Boyer
-# Last Update: 12/30/2016
+# Last Update: 12/31/2016
 
 # source:
 source("reshape_data.R")
@@ -141,7 +141,7 @@ unique(fd_summarized$point_desc[!(fd_summarized$point_desc %in% stores$Descripti
 # Get Chain Level statistics for each buffer value
 # Chains have AT LEAST 2 establishments
 stores_w_sum$chain_id <- as.factor(stores_w_sum$chain_id)
-stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>%
+chains_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>%
   dplyr::mutate(count=length(chain_id)) %>%
   dplyr::filter(count >= 2) %>%
   dplyr::summarise(
@@ -156,9 +156,9 @@ stores_grouped <- dplyr::group_by(stores_w_sum, chain_id, buffer) %>%
     )
 
 #pass "count" back to stores data for vizualization
-stores2 <- 
+chains <- 
   dplyr::inner_join(stores_w_sum, 
-                    stores_grouped[ ,c("chain_id", "count")],
+                    chains_grouped[ ,c("chain_id", "count")],
                     by="chain_id") %>%
   distinct_() %>%
   arrange(chain_id)
