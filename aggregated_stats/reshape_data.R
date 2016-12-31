@@ -6,7 +6,7 @@
 #   always generate to new datasets.
 
 # Author: Ryan Boyer
-# Last Update: 12/30/2016
+# Last Update: 12/31/2016
 
 # Packages
 library(dplyr)
@@ -115,9 +115,6 @@ fd_to_list <-
       f
     }
   })
-  
-  # Drop duplicated rows
-  df <- df[!duplicated(df), ]
 
   # Create Chain id - a string that will be unique for each chain e.g. mcdonalds
   df$chain_id <- create_chain_id(df[ , chain_name])
@@ -157,6 +154,9 @@ fd_to_list <-
 clean_gsr <- function(df, drops, chain_name, g_or_r){
   #Drop
   df <- df[ , !(names(df) %in% drops)]
+  
+  # Drop duplicated rows
+  df <- df[!duplicated(df), ]
   
   # Create unique_name
   # Removes punc&spaces, all lowercases
