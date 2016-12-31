@@ -115,6 +115,9 @@ fd_to_list <-
       f
     }
   })
+  
+  # Drop duplicated rows
+  df <- df[!duplicated(df), ]
 
   # Create Chain id - a string that will be unique for each chain e.g. mcdonalds
   df$chain_id <- create_chain_id(df[ , chain_name])
@@ -139,6 +142,7 @@ fd_to_list <-
 # FUNCTION: clean_gsr
 # Cleans grocery store or restaurant data into R ready format.
 # Drops unecessary columns, handles type conversions, creates chain_id
+# Drops duplicated rows (no need to include a restaurant twice)
 # 
 # INPUT:
 # df: data frame of grocery store or restaurant dta
