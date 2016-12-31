@@ -94,7 +94,7 @@ ct_area_data <- read.table("../data/ct_area_yds.txt",
     ))
 
 #############################################################################
-# Group, Organize, & Summarize Data
+# Group, Organize, & Summarize Store Level Statitics
 #############################################################################
 # group by buffer val/establishment pair via reshape_data.R
 # only keep desired columns and convert to appropriate (numeric, char, etc.)
@@ -125,6 +125,18 @@ fd_summarized <- dplyr::summarise(fd_grouped,
 
 #Join stores and Summarys
 stores_w_sum <- inner_join(stores, fd_summarized, by=c("Description"="point_desc"))
+
+##########################################################
+# Missing Stores:
+##########################################################
+# Not processed by ArcMap/ArcPy (Why????)
+stores$Description[!(stores$Description %in% fd_summarized$point_desc)]
+# Not exported as point data from ArcMap (Exclamation points not beign exported)
+unique(fd_summarized$point_desc[!(fd_summarized$point_desc %in% stores$Description)])
+
+#############################################################################
+# Group, Organize, & Summarize Chain Level Statitics
+############################################################################# 
 
 #Get Chain Level statistics for each buffer value
 stores_w_sum$chain_id <- as.factor(stores_w_sum$chain_id)
