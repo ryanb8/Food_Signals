@@ -1,3 +1,15 @@
+# This is a single helper file from Excel and CSV Conversion Tools Toolbox
+# ArcMap Description: This toolbox includes four tools: TableToCSV,
+# TableToExcel, CSVToTable, and ExcelToTable. Both .xls and .xlsx file
+# formats are supported in this toolbox. The toolbox utilizes (and includes)
+#  XLRD, XLWT, and OPENPYXL Python modules.
+#
+# From : "http://www.arcgis.com/home/item.html?id
+# =f3d91b8f852042e289e09a7ec8342431"
+#
+# Via by teampython
+# Last Modified: September 4, 2012
+
 import os
 import arcpy
 
